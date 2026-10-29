@@ -1,16 +1,19 @@
 name: Release
 
-# Publishing uses trusted publishing (OIDC): no long-lived token is stored in this
-# repository. Configure it once on each registry:
-#   PyPI  -> https://pypi.org/manage/account/publishing/ (pending publisher, the
-#            project does not exist yet)
-#            project: bookivox  owner: limitless-influence-ai  repository: bookivox-sdk
-#            workflow: release.yml  environment: pypi
-#   npm   -> https://www.npmjs.com/package/@bookivox/sdk/access
-#            trusted publisher: GitHub Actions / limitless-influence-ai / bookivox-sdk
-#            workflow: release.yml  environment: npm
-#            npm has no pending publisher: the first publish needs a granular
-#            token scoped to @bookivox/sdk, OIDC takes over afterwards.
+# One tag publishes both registries. Authentication uses trusted publishing
+# (OIDC): no long-lived token is stored in this repository.
+#
+# Register the publisher once per registry:
+#   PyPI -> https://pypi.org/manage/project/bookivox/settings/publishing/
+#           owner: limitless-influence-ai  repository: bookivox-sdk
+#           workflow: release.yml          environment: pypi
+#   npm  -> https://www.npmjs.com/package/@bookivox/sdk/access
+#           GitHub Actions / limitless-influence-ai / bookivox-sdk
+#           workflow: release.yml          environment: npm
+#
+# npm has no pending publisher: the package must exist before the settings page
+# shows the "Trusted Publisher" section, so the very first publish is manual.
+# Every later version goes through this workflow.
 
 on:
   push:
@@ -25,31 +28,79 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verify:
-    name: Verify tag and generated code
+    name: Verify tag, generated code and builds
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Generated files are up to date
         run: ./generate_sdk.sh --check
-      - name: Tag matches package versions
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          tag="${GITHUB_REF_NAME#v}"
-          python - "$tag" <<'PY'
-          import json, re, sys, tomllib
 
-          tag = sys.argv[1]
+      - name: Tag matches every version marker
+        id: version
+        run: |
+          python - <<'PY'
+          import json, os, re, sys, tomllib
+          from pathlib import Path
+
           project = tomllib.load(open("python/pyproject.toml", "rb"))["project"]["version"]
           package = json.load(open("typescript/package.json"))["version"]
-          print(f"tag={tag} python={project} npm={package}")
-          if not (tag == project == package):
-              sys.exit("Version mismatch: tag, pyproject.toml and package.json must agree.")
+          lock = json.load(open("typescript/package-lock.json"))["version"]
+          init = re.search(r'__version__ = "([^"]+)"', Path("python/src/bookivox_sdk/__init__.py").read_text())[1]
+          cli = re.search(r'version="bookivox ([^"]+)"', Path("python/src/bookivox_sdk/cli.py").read_text())[1]
+
+          found = {"pyproject": project, "package.json": package, "package-lock": lock,
+                   "__init__": init, "cli": cli}
+          print("versions:", found)
+          if len(set(found.values())) != 1:
+              sys.exit("Version drift between manifests and code: %s" % found)
+
+          version = project
+          ref = os.environ.get("GITHUB_REF", "")
+          if ref.startswith("refs/tags/v") and os.environ["GITHUB_REF_NAME"] != f"v{version}":
+              sys.exit(f"Tag {os.environ['GITHUB_REF_NAME']} does not match version {version}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"value={version}\n")
           PY
+
+      - name: Build the Python distribution
+        working-directory: python
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build --outdir dist
+          twine check dist/*
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: typescript/package-lock.json
+
+      - name: Typecheck and build the TypeScript SDK
+        working-directory: typescript
+        run: |
+          npm ci
+          npm run typecheck
+          npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: python/dist/*
+          if-no-files-found: error
 
   pypi:
     name: Publish to PyPI
@@ -63,19 +114,28 @@ jobs:
       id-token: write # trusted publishing
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/download-artifact@v4
         with:
-          python-version: "3.12"
-      - name: Build
-        working-directory: python
+          name: python-dist
+          path: dist
+
+      - name: Skip if this version already exists
+        id: check
         run: |
-          python -m pip install --upgrade pip build
-          python -m build --outdir dist
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://pypi.org/pypi/bookivox/${{ needs.verify.outputs.version }}/json")
+          echo "registry_status=${status}"
+          if [ "${status}" = "200" ]; then
+            echo "exists=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "exists=false" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Publish
+        if: steps.check.outputs.exists != 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: python/dist
+          packages-dir: dist
 
   npm:
     name: Publish to npm
@@ -86,21 +146,56 @@ jobs:
       name: npm
       url: https://www.npmjs.com/package/@bookivox/sdk
     permissions:
-      id-token: write # npm provenance
+      id-token: write # trusted publishing and provenance
       contents: read
     steps:
       - uses: actions/checkout@v4
+
       # Trusted publishing requires Node >= 22.14 (npm CLI >= 11.5.1).
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           registry-url: https://registry.npmjs.org
           package-manager-cache: false # never cache a release build
+
+      - name: Skip if this version already exists
+        id: check
+        working-directory: typescript
+        run: |
+          if npm view "@bookivox/sdk@${{ needs.verify.outputs.version }}" version >/dev/null 2>&1; then
+            echo "exists=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "exists=false" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Install and build
+        if: steps.check.outputs.exists != 'true'
         working-directory: typescript
         run: |
           npm ci
           npm run build
+
+      # npm detects the OIDC environment, exchanges it for a short-lived token
+      # and generates provenance automatically. No NODE_AUTH_TOKEN is needed.
       - name: Publish
+        if: steps.check.outputs.exists != 'true'
         working-directory: typescript
-        run: npm publish --access public # provenance is generated automatically
+        run: npm publish --access public
+
+  github-release:
+    name: Create the GitHub release
+    needs: [verify, pypi, npm]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*
