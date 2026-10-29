@@ -17,6 +17,8 @@ Usage:
     ./generate_sdk.sh                       # fetch from BOOKIVOX_OPENAPI_URL
     ./generate_sdk.sh --spec ./openapi.json  # use a local schema file
     ./generate_sdk.sh --check               # CI: fail if generated files drift
+                                             # (offline: re-renders from the
+                                             # committed openapi.sdk.json)
 
 The generator only uses the standard library so it can run anywhere.
 """
@@ -570,7 +572,12 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    spec = load_spec(args.spec)
+    if args.check and args.spec is None:
+        # Verification must not depend on a running API: re-render the committed
+        # contract and compare the result with the committed outputs.
+        spec = load_spec(str(SDK_ROOT / "openapi.sdk.json"))
+    else:
+        spec = load_spec(args.spec)
     operations = sdk_operations(spec)
     if not operations:
         print("No operation tagged with 'x-sdk-method'. Nothing to generate.", file=sys.stderr)
