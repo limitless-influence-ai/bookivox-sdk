@@ -2,12 +2,15 @@ name: Release
 
 # Publishing uses trusted publishing (OIDC): no long-lived token is stored in this
 # repository. Configure it once on each registry:
-#   PyPI  -> https://pypi.org/manage/project/bookivox/settings/publishing/
-#            owner: limitless-influence-ai  repository: bookivox-sdk
+#   PyPI  -> https://pypi.org/manage/account/publishing/ (pending publisher, the
+#            project does not exist yet)
+#            project: bookivox  owner: limitless-influence-ai  repository: bookivox-sdk
 #            workflow: release.yml  environment: pypi
 #   npm   -> https://www.npmjs.com/package/@bookivox/sdk/access
 #            trusted publisher: GitHub Actions / limitless-influence-ai / bookivox-sdk
 #            workflow: release.yml  environment: npm
+#            npm has no pending publisher: the first publish needs a granular
+#            token scoped to @bookivox/sdk, OIDC takes over afterwards.
 
 on:
   push:
