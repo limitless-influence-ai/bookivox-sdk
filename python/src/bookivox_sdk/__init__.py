@@ -21,7 +21,7 @@ from .errors import (
 from .models import *  # noqa: F401,F403
 from .models import __all__ as _model_exports
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "Bookivox",

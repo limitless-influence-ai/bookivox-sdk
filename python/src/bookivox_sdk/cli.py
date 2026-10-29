@@ -289,7 +289,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="bookivox",
         description="Command line interface for the Bookivox API.",
     )
-    parser.add_argument("--version", action="version", version="bookivox 0.1.0")
+    parser.add_argument("--version", action="version", version="bookivox 0.1.1")
     sub = parser.add_subparsers(dest="command", required=True)
 
     login = sub.add_parser("login", help="Store an API key locally (0600 permissions).")
