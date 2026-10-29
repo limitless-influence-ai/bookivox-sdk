@@ -79,6 +79,25 @@ cd typescript && npm install
 npm run typecheck && npm run build
 ```
 
+## Releasing
+
+CI runs on every push and pull request: generated files must be up to date,
+the Python package is built and checked on 3.11–3.13, and the TypeScript SDK is
+typechecked and built.
+
+A release is a tagged commit. Bump the version in `python/pyproject.toml` and
+`typescript/package.json`, then:
+
+```bash
+git tag -a v0.2.0 -m "Bookivox SDKs 0.2.0"
+git push origin v0.2.0
+```
+
+The `Release` workflow verifies that the tag matches both versions, then
+publishes to PyPI and npm using **trusted publishing (OIDC)** — no token is
+stored in this repository. One-time setup: register the trusted publisher on
+PyPI (`bookivox`) and npm (`@bookivox/sdk`) with workflow `release.yml`.
+
 ## Security
 
 - Never commit `.env` files or API keys; load them from your platform's secret manager.

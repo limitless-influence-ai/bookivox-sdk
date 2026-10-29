@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generated:
+    name: Generated code is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify generated files match openapi.sdk.json
+        run: ./generate_sdk.sh --check
+
+  python:
+    name: Python SDK
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        working-directory: python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install build twine
+      - name: Import and smoke test
+        working-directory: python
+        run: |
+          python -c "import bookivox_sdk as s; c = s.Bookivox('test'); assert c.base_url == 'https://api.bookivox.com'"
+          bookivox --version
+          bookivox config
+      - name: Build and check the distribution
+        working-directory: python
+        run: |
+          python -m build --outdir dist
+          twine check dist/*
+
+  typescript:
+    name: TypeScript SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: typescript/package-lock.json
+      - name: Install
+        working-directory: typescript
+        run: npm ci
+      - name: Typecheck
+        working-directory: typescript
+        run: npm run typecheck
+      - name: Build
+        working-directory: typescript
+        run: npm run build

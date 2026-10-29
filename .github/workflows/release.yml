@@ -1,0 +1,103 @@
+name: Release
+
+# Publishing uses trusted publishing (OIDC): no long-lived token is stored in this
+# repository. Configure it once on each registry:
+#   PyPI  -> https://pypi.org/manage/project/bookivox/settings/publishing/
+#            owner: limitless-influence-ai  repository: bookivox-sdk
+#            workflow: release.yml  environment: pypi
+#   npm   -> https://www.npmjs.com/package/@bookivox/sdk/access
+#            trusted publisher: GitHub Actions / limitless-influence-ai / bookivox-sdk
+#            workflow: release.yml  environment: npm
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish to PyPI and npm (leave unchecked for a dry run)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify tag and generated code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generated files are up to date
+        run: ./generate_sdk.sh --check
+      - name: Tag matches package versions
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          python - "$tag" <<'PY'
+          import json, re, sys, tomllib
+
+          tag = sys.argv[1]
+          project = tomllib.load(open("python/pyproject.toml", "rb"))["project"]["version"]
+          package = json.load(open("typescript/package.json"))["version"]
+          print(f"tag={tag} python={project} npm={package}")
+          if not (tag == project == package):
+              sys.exit("Version mismatch: tag, pyproject.toml and package.json must agree.")
+          PY
+
+  pypi:
+    name: Publish to PyPI
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.publish
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/bookivox
+    permissions:
+      id-token: write # trusted publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        working-directory: python
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --outdir dist
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
+
+  npm:
+    name: Publish to npm
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.publish
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@bookivox/sdk
+    permissions:
+      id-token: write # npm provenance
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: typescript/package-lock.json
+          registry-url: https://registry.npmjs.org
+      - name: Install and build
+        working-directory: typescript
+        run: |
+          npm ci
+          npm run build
+      - name: Publish
+        working-directory: typescript
+        run: npm publish --access public --provenance
