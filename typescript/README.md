@@ -135,6 +135,36 @@ Body fields are merged into every `POST`/`PUT`/`PATCH` JSON body (query params
 for `GET`/`DELETE`) and take precedence over model- and preset-provided
 parameters.
 
+## MCP tools
+
+An `mcp` tool exposes the tools of an external Model Context Protocol server
+(streamable HTTP only). `url` is required; `tools_filter` is an allowlist of
+tool names (empty exposes every tool). `discovered_tools` is managed by the
+server and must never be sent by hand:
+
+```ts
+await client.createTool({
+  name: "Customer MCP server",
+  description: "Look up customers and their open tickets.",
+  category: "mcp",
+  definition: {
+    schema_version: 1,
+    type: "mcp",
+    config: {
+      transport: "streamable_http",
+      url: "https://mcp.example.com/mcp",
+      credential_uuid: null,
+      tools_filter: ["lookup_customer", "list_tickets"],
+      timeout_secs: 30,
+      sse_read_timeout_secs: 300,
+    },
+  },
+});
+```
+
+Refreshing the catalogue (`POST /tools/{uuid}/mcp/refresh`) is UI-only: it is
+rate limited (10/min/user) and is not exposed by the SDK.
+
 ## Filtering and pagination
 
 List methods accept optional filters. Documents are pageable with `limit` and `offset`:
