@@ -105,6 +105,36 @@ for (const workflow of workflows) {
 | `listCredentials()` | `GET /credentials/` | List credentials |
 | `testPhoneCall(body)` | `POST /telephony/initiate-call` | Start a test call (**billable**) |
 
+## Credentials
+
+Credentials are created from the Bookivox UI or with a direct REST call
+(`POST /api/v1/credentials`), then referenced by `credential_uuid` in a tool
+definition. The SDK only lists them (`listCredentials`), so secrets never pass
+through your code.
+
+The `custom_header` credential type carries **multiple HTTP headers** and
+**JSON body fields** in one reusable object — required by APIs that authenticate
+in the body (for example Mews `ClientToken` / `AccessToken` / `Client`):
+
+```json
+{
+  "name": "Mews Connector",
+  "credential_type": "custom_header",
+  "credential_data": {
+    "headers": [{ "name": "X-Source", "value": "bookivox" }],
+    "body": [
+      { "name": "ClientToken", "value": "<client-token>" },
+      { "name": "AccessToken", "value": "<access-token>" },
+      { "name": "Client", "value": "<integration-name>" }
+    ]
+  }
+}
+```
+
+Body fields are merged into every `POST`/`PUT`/`PATCH` JSON body (query params
+for `GET`/`DELETE`) and take precedence over model- and preset-provided
+parameters.
+
 ## Filtering and pagination
 
 List methods accept optional filters. Documents are pageable with `limit` and `offset`:
