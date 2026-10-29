@@ -1,0 +1,3331 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bookivox SDK API",
+    "description": "Public contract consumed by the Bookivox SDKs. Contains only the operations tagged with `x-sdk-method`.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.bookivox.com",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/api/v1/credentials/": {
+      "get": {
+        "tags": [
+          "main",
+          "credentials"
+        ],
+        "summary": "List Credentials",
+        "description": "List all webhook credentials for the user's organization.\n\nReturns:\n    List of credentials (without sensitive data)",
+        "operationId": "list_credentials_api_v1_credentials__get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CredentialResponse"
+                  },
+                  "title": "Response List Credentials Api V1 Credentials  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_credentials",
+        "x-sdk-description": "List webhook credentials available to the authenticated organization."
+      }
+    },
+    "/api/v1/knowledge-base/documents": {
+      "get": {
+        "tags": [
+          "main",
+          "knowledge-base"
+        ],
+        "summary": "List documents",
+        "description": "List all documents for the user's organization.\n\nAccess Control:\n* Users can only see documents from their organization.",
+        "operationId": "list_documents_api_v1_knowledge_base_documents_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by processing status",
+              "title": "Status"
+            },
+            "description": "Filter by processing status"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentListResponseSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_documents",
+        "x-sdk-description": "List knowledge base documents available to the authenticated organization."
+      }
+    },
+    "/api/v1/node-types": {
+      "get": {
+        "tags": [
+          "main",
+          "node-types"
+        ],
+        "summary": "List Node Types",
+        "description": "List every registered NodeSpec.\n\nSDK clients should pin to `spec_version` and warn if the server reports\na higher version than what they were generated against.",
+        "operationId": "list_node_types_api_v1_node_types_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeTypesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_node_types",
+        "x-sdk-description": "List every registered node type with its spec. Pinned to spec_version."
+      }
+    },
+    "/api/v1/node-types/{name}": {
+      "get": {
+        "tags": [
+          "main",
+          "node-types"
+        ],
+        "summary": "Get Node Type",
+        "operationId": "get_node_type_api_v1_node_types__name__get",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeSpec"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "get_node_type",
+        "x-sdk-description": "Fetch a single node spec by name."
+      }
+    },
+    "/api/v1/telephony/initiate-call": {
+      "post": {
+        "tags": [
+          "main",
+          "telephony"
+        ],
+        "summary": "Initiate Call",
+        "description": "Initiate a call using the configured telephony provider from web browser. This is\nsupposed to be a test call method for the draft version of the agent.",
+        "operationId": "initiate_call_api_v1_telephony_initiate_call_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateCallRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiateCallResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "test_phone_call",
+        "x-sdk-description": "Place a test call from a workflow to a phone number."
+      }
+    },
+    "/api/v1/tools/": {
+      "post": {
+        "tags": [
+          "main",
+          "tools"
+        ],
+        "summary": "Create Tool",
+        "description": "Create a new tool.\n\nArgs:\n    request: The tool creation request\n\nReturns:\n    The created tool",
+        "operationId": "create_tool_api_v1_tools__post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateToolRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "create_tool",
+        "x-sdk-description": "Create a reusable tool for the authenticated organization."
+      },
+      "get": {
+        "tags": [
+          "main",
+          "tools"
+        ],
+        "summary": "List Tools",
+        "description": "List all tools for the user's organization.\n\nArgs:\n    status: Optional filter by status (active, archived, draft)\n    category: Optional filter by category (http_api, native, integration)\n\nReturns:\n    List of tools",
+        "operationId": "list_tools_api_v1_tools__get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ToolResponse"
+                  },
+                  "title": "Response List Tools Api V1 Tools  Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_tools",
+        "x-sdk-description": "List tools available to the authenticated organization."
+      }
+    },
+    "/api/v1/workflow-recordings/": {
+      "get": {
+        "tags": [
+          "main",
+          "workflow-recordings"
+        ],
+        "summary": "List recordings",
+        "description": "List recordings for the organization, optionally filtered.",
+        "operationId": "list_recordings_api_v1_workflow_recordings__get",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by workflow ID",
+              "title": "Workflow Id"
+            },
+            "description": "Filter by workflow ID"
+          },
+          {
+            "name": "tts_provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by TTS provider",
+              "title": "Tts Provider"
+            },
+            "description": "Filter by TTS provider"
+          },
+          {
+            "name": "tts_model",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by TTS model",
+              "title": "Tts Model"
+            },
+            "description": "Filter by TTS model"
+          },
+          {
+            "name": "tts_voice_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by TTS voice ID",
+              "title": "Tts Voice Id"
+            },
+            "description": "Filter by TTS voice ID"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingListResponseSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_recordings",
+        "x-sdk-description": "List workflow recordings available to the authenticated organization."
+      }
+    },
+    "/api/v1/workflow/create/definition": {
+      "post": {
+        "tags": [
+          "main",
+          "workflow"
+        ],
+        "summary": "Create Workflow",
+        "description": "Create a new workflow from the client\n\nArgs:\n    request: The create workflow request\n    user: The user to create the workflow for",
+        "operationId": "create_workflow_api_v1_workflow_create_definition_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflowRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "create_workflow",
+        "x-sdk-description": "Create a new workflow from a workflow definition."
+      }
+    },
+    "/api/v1/workflow/fetch": {
+      "get": {
+        "tags": [
+          "main",
+          "workflow"
+        ],
+        "summary": "Get Workflows",
+        "description": "Get all workflows for the authenticated user's organization.\n\nReturns a lightweight response with only essential fields for listing.\nUse GET /workflow/fetch/{workflow_id} to get full workflow details.",
+        "operationId": "get_workflows_api_v1_workflow_fetch_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by status - can be single value (active/archived) or comma-separated (active,archived)",
+              "title": "Status"
+            },
+            "description": "Filter by status - can be single value (active/archived) or comma-separated (active,archived)"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowListResponse"
+                  },
+                  "title": "Response Get Workflows Api V1 Workflow Fetch Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "list_workflows",
+        "x-sdk-description": "List all workflows in the authenticated organization."
+      }
+    },
+    "/api/v1/workflow/fetch/{workflow_id}": {
+      "get": {
+        "tags": [
+          "main",
+          "workflow"
+        ],
+        "summary": "Get Workflow",
+        "description": "Get a single workflow by ID.\n\nIf a draft version exists, returns the draft content for editing.\nOtherwise returns the published version's content.",
+        "operationId": "get_workflow_api_v1_workflow_fetch__workflow_id__get",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Workflow Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "get_workflow",
+        "x-sdk-description": "Get a single workflow by ID (returns draft if one exists, else published)."
+      }
+    },
+    "/api/v1/workflow/{workflow_id}": {
+      "put": {
+        "tags": [
+          "main",
+          "workflow"
+        ],
+        "summary": "Update Workflow",
+        "description": "Update an existing workflow.\n\nArgs:\n    workflow_id: The public id (UUID) of the workflow to update\n    request: The update request containing the new name and workflow definition\n\nReturns:\n    The updated workflow\n\nRaises:\n    HTTPException: If the workflow is not found or if there's a database error",
+        "operationId": "update_workflow_api_v1_workflow__workflow_id__put",
+        "parameters": [
+          {
+            "name": "workflow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Workflow Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-sdk-method": "update_workflow",
+        "x-sdk-description": "Update a workflow's name and/or definition. Saves as a new draft."
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CalculatorToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "calculator",
+            "title": "Type",
+            "description": "Tool type."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "CalculatorToolDefinition",
+        "description": "Tool definition for Calculator tools."
+      },
+      "CallDispositionCodes": {
+        "properties": {
+          "disposition_codes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Disposition Codes"
+          }
+        },
+        "type": "object",
+        "title": "CallDispositionCodes"
+      },
+      "CreateToolRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "title": "Name",
+            "description": "Display name for the tool.",
+            "llm_hint": "Use a concise action-oriented name; this influences the function name shown to the agent."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description shown to the agent when deciding whether to call it.",
+            "llm_hint": "State exactly when the agent should call the tool and what result it gets."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "http_api",
+              "end_call",
+              "transfer_call",
+              "calculator",
+              "native",
+              "integration",
+              "mcp"
+            ],
+            "title": "Category",
+            "description": "Tool category. Must match definition.type.",
+            "default": "http_api"
+          },
+          "icon": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon",
+            "description": "Lucide icon identifier.",
+            "default": "globe"
+          },
+          "icon_color": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 7
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon Color",
+            "description": "Hex color for the tool icon.",
+            "default": "#3B82F6"
+          },
+          "definition": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HttpApiToolDefinition"
+              },
+              {
+                "$ref": "#/components/schemas/EndCallToolDefinition"
+              },
+              {
+                "$ref": "#/components/schemas/TransferCallToolDefinition"
+              },
+              {
+                "$ref": "#/components/schemas/IntegrationToolDefinition"
+              },
+              {
+                "$ref": "#/components/schemas/CalculatorToolDefinition"
+              },
+              {
+                "$ref": "#/components/schemas/McpToolDefinition"
+              }
+            ],
+            "title": "Definition",
+            "description": "Typed tool definition.",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "calculator": "#/components/schemas/CalculatorToolDefinition",
+                "end_call": "#/components/schemas/EndCallToolDefinition",
+                "http_api": "#/components/schemas/HttpApiToolDefinition",
+                "integration": "#/components/schemas/IntegrationToolDefinition",
+                "mcp": "#/components/schemas/McpToolDefinition",
+                "transfer_call": "#/components/schemas/TransferCallToolDefinition"
+              }
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "definition"
+        ],
+        "title": "CreateToolRequest",
+        "description": "Request schema for creating a reusable tool."
+      },
+      "CreateWorkflowRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "workflow_definition": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Workflow Definition"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "workflow_definition"
+        ],
+        "title": "CreateWorkflowRequest"
+      },
+      "CreatedByResponse": {
+        "properties": {
+          "provider_id": {
+            "type": "string",
+            "title": "Provider Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider_id"
+        ],
+        "title": "CreatedByResponse",
+        "description": "Response schema for the user who created a tool."
+      },
+      "CredentialResponse": {
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "title": "Uuid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "credential_type": {
+            "type": "string",
+            "title": "Credential Type"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uuid",
+          "name",
+          "description",
+          "credential_type",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "CredentialResponse",
+        "description": "Response schema for a webhook credential without sensitive fields."
+      },
+      "DisplayOptions": {
+        "properties": {
+          "show": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "items": {},
+                  "type": "array"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Show"
+          },
+          "hide": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "items": {},
+                  "type": "array"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hide"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "DisplayOptions",
+        "description": "Conditional visibility rules.\n\n`show` keys are AND-combined: this property is visible only when EVERY\nreferenced field's value matches one of the listed values.\n\n`hide` keys are OR-combined: this property is hidden when ANY referenced\nfield's value matches one of the listed values.\n\nExample:\n    DisplayOptions(show={\"extraction_enabled\": [True]})\n    DisplayOptions(show={\"greeting_type\": [\"audio\"]})"
+      },
+      "DocumentListResponseSchema": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentResponseSchema"
+            },
+            "type": "array",
+            "title": "Documents"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "description": "Total number of active documents for the organization, ignoring pagination and status filters",
+            "default": 0
+          },
+          "max_documents": {
+            "type": "integer",
+            "title": "Max Documents",
+            "description": "Maximum number of documents allowed for the organization",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "documents",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "DocumentListResponseSchema",
+        "description": "Response schema for list of documents."
+      },
+      "DocumentResponseSchema": {
+        "properties": {
+          "document_uuid": {
+            "type": "string",
+            "title": "Document Uuid"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "file_size_bytes": {
+            "type": "integer",
+            "title": "File Size Bytes"
+          },
+          "file_hash": {
+            "type": "string",
+            "title": "File Hash"
+          },
+          "mime_type": {
+            "type": "string",
+            "title": "Mime Type"
+          },
+          "processing_status": {
+            "type": "string",
+            "title": "Processing Status"
+          },
+          "processing_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Error"
+          },
+          "processing_error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Error Code",
+            "description": "Stable error code extracted from processing_error (e.g. knowledge_base_no_extractable_text)"
+          },
+          "processing_diagnostic": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Diagnostic",
+            "description": "Non-sensitive diagnostic context for a failed document (e.g. page_count, reason)"
+          },
+          "total_chunks": {
+            "type": "integer",
+            "title": "Total Chunks"
+          },
+          "retrieval_mode": {
+            "type": "string",
+            "title": "Retrieval Mode",
+            "default": "chunked"
+          },
+          "custom_metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Custom Metadata"
+          },
+          "docling_metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Docling Metadata"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document_uuid",
+          "filename",
+          "file_size_bytes",
+          "file_hash",
+          "mime_type",
+          "processing_status",
+          "total_chunks",
+          "custom_metadata",
+          "docling_metadata",
+          "created_at",
+          "updated_at",
+          "is_active"
+        ],
+        "title": "DocumentResponseSchema",
+        "description": "Response schema for document metadata."
+      },
+      "EndCallConfig": {
+        "properties": {
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "none",
+              "custom",
+              "audio"
+            ],
+            "title": "Messagetype",
+            "description": "Type of goodbye message.",
+            "default": "none"
+          },
+          "customMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessage",
+            "description": "Custom message to play before ending the call."
+          },
+          "audioRecordingId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audiorecordingid",
+            "description": "Recording ID for audio goodbye message."
+          },
+          "endCallReason": {
+            "type": "boolean",
+            "title": "Endcallreason",
+            "description": "When enabled, the model must provide a reason for ending the call. The reason is set as call disposition and added to call tags.",
+            "default": false
+          },
+          "endCallReasonDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Endcallreasondescription",
+            "description": "Description shown to the model for the reason parameter. Used only when endCallReason is enabled."
+          }
+        },
+        "type": "object",
+        "title": "EndCallConfig",
+        "description": "Configuration for End Call tools."
+      },
+      "EndCallToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "end_call",
+            "title": "Type",
+            "description": "Tool type."
+          },
+          "config": {
+            "$ref": "#/components/schemas/EndCallConfig",
+            "description": "End Call configuration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "config"
+        ],
+        "title": "EndCallToolDefinition",
+        "description": "Tool definition for End Call tools."
+      },
+      "GraphConstraints": {
+        "properties": {
+          "min_incoming": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Incoming"
+          },
+          "max_incoming": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Incoming"
+          },
+          "min_outgoing": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Outgoing"
+          },
+          "max_outgoing": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Outgoing"
+          },
+          "min_instances": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Instances"
+          },
+          "max_instances": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Instances"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "GraphConstraints",
+        "description": "Per-node-type graph rules. WorkflowGraph enforces these at validation."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HttpApiConfig": {
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ],
+            "title": "Method",
+            "description": "HTTP method to use for the request.",
+            "llm_hint": "Use one of GET, POST, PUT, PATCH, DELETE."
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "Target HTTP or HTTPS URL.",
+            "llm_hint": "Use the final endpoint URL. Authentication belongs in credential_uuid, not embedded in the URL."
+          },
+          "headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headers",
+            "description": "Static headers to include with every request.",
+            "llm_hint": "Do not place secrets here. Store secrets in the UI credential manager and reference them with credential_uuid."
+          },
+          "credential_uuid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credential Uuid",
+            "description": "Reference to an external credential for request authentication.",
+            "llm_hint": "Use a credential_uuid returned by list_credentials. The MCP flow does not create credential secrets."
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ToolParameter"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameters",
+            "description": "Parameters the model must provide when calling this tool."
+          },
+          "preset_parameters": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PresetToolParameter"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset Parameters",
+            "description": "Parameters injected by Bookivox from fixed values or workflow context templates."
+          },
+          "timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Ms",
+            "description": "Request timeout in milliseconds.",
+            "default": 5000
+          },
+          "customMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessage",
+            "description": "Custom message to play after tool execution."
+          },
+          "customMessageType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "audio"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessagetype",
+            "description": "Type of custom message."
+          },
+          "customMessageRecordingId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessagerecordingid",
+            "description": "Recording ID for an audio custom message."
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "url"
+        ],
+        "title": "HttpApiConfig",
+        "description": "Configuration for HTTP API tools."
+      },
+      "HttpApiToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "http_api",
+            "title": "Type",
+            "description": "Tool type."
+          },
+          "config": {
+            "$ref": "#/components/schemas/HttpApiConfig",
+            "description": "HTTP API configuration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "config"
+        ],
+        "title": "HttpApiToolDefinition",
+        "description": "Tool definition for HTTP API tools."
+      },
+      "InitiateCallRequest": {
+        "properties": {
+          "workflow_id": {
+            "type": "string",
+            "title": "Workflow Id"
+          },
+          "workflow_run_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Run Id"
+          },
+          "phone_number": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number"
+          },
+          "telephony_configuration_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telephony Configuration Id"
+          },
+          "from_phone_number_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Phone Number Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "workflow_id"
+        ],
+        "title": "InitiateCallRequest"
+      },
+      "InitiateCallResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "InitiateCallResponse"
+      },
+      "IntegrationToolConfig": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "const": "calendly",
+            "title": "Provider",
+            "description": "Integration provider identifier."
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "find_slots",
+              "create_booking",
+              "lookup_booking",
+              "cancel_booking",
+              "reschedule_booking"
+            ],
+            "title": "Operation",
+            "description": "Operation to run for this integration tool."
+          },
+          "credential_uuid": {
+            "type": "string",
+            "title": "Credential Uuid",
+            "description": "Reference to an external credential for Calendly API authentication.",
+            "llm_hint": "Use a credential_uuid returned by list_credentials."
+          },
+          "toolset_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toolset Key",
+            "description": "Stable identifier for one Calendly configuration/toolset."
+          },
+          "event_type_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type Uri",
+            "description": "Calendly event type URI. Required for availability and booking operations.",
+            "llm_hint": "Use an event type URI from Calendly (https://api.calendly.com/event_types/...)."
+          },
+          "event_type_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type Name",
+            "description": "Human-readable Calendly event type name."
+          },
+          "event_type_duration": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type Duration",
+            "description": "Calendly event type duration in minutes."
+          },
+          "event_type_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type Kind",
+            "description": "Calendly event type kind, for example solo or group."
+          },
+          "event_type_locations": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Type Locations",
+            "description": "Calendly event type locations metadata used to validate booking payloads."
+          },
+          "default_timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Timezone",
+            "description": "Default IANA timezone when the caller timezone is unknown.",
+            "llm_hint": "Example: America/New_York"
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ToolParameter"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameters",
+            "description": "Parameters the model must provide when calling this tool."
+          },
+          "preset_parameters": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PresetToolParameter"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset Parameters",
+            "description": "Parameters injected by Bookivox from fixed values or workflow context templates."
+          },
+          "timeout_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Ms",
+            "description": "Request timeout in milliseconds.",
+            "default": 8000
+          },
+          "customMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessage",
+            "description": "Custom message to play after tool execution."
+          },
+          "customMessageType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "audio"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessagetype",
+            "description": "Type of custom message."
+          },
+          "customMessageRecordingId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessagerecordingid",
+            "description": "Recording ID for an audio custom message."
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider",
+          "operation",
+          "credential_uuid"
+        ],
+        "title": "IntegrationToolConfig"
+      },
+      "IntegrationToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "integration",
+            "title": "Type",
+            "description": "Tool type."
+          },
+          "config": {
+            "$ref": "#/components/schemas/IntegrationToolConfig",
+            "description": "Integration configuration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "config"
+        ],
+        "title": "IntegrationToolDefinition"
+      },
+      "McpToolConfig": {
+        "properties": {
+          "transport": {
+            "type": "string",
+            "const": "streamable_http",
+            "title": "Transport",
+            "description": "MCP transport protocol.",
+            "default": "streamable_http"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "MCP server URL. Must use http:// or https://.",
+            "llm_hint": "Use the server's streamable HTTP MCP endpoint."
+          },
+          "credential_uuid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credential Uuid",
+            "description": "Reference to an external credential for MCP server auth.",
+            "llm_hint": "Use a credential_uuid returned by list_credentials. Credentials are created by the user in the UI."
+          },
+          "tools_filter": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tools Filter",
+            "description": "Allowlist of MCP tool names to expose. Empty exposes all tools.",
+            "llm_hint": "Use exact MCP tool names from the remote server catalog when you need to restrict the exposed tools."
+          },
+          "timeout_secs": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Timeout Secs",
+            "description": "Connection timeout in seconds.",
+            "default": 30
+          },
+          "sse_read_timeout_secs": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Sse Read Timeout Secs",
+            "description": "SSE read timeout in seconds.",
+            "default": 300
+          },
+          "discovered_tools": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Discovered Tools",
+            "description": "Server-managed cache of the MCP server's tool catalog [{name, description}]. Populated best-effort by the backend.",
+            "llm_hint": "Do not author this field; the server fills it."
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "McpToolConfig",
+        "description": "Configuration for a customer MCP server tool definition."
+      },
+      "McpToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "mcp",
+            "title": "Type",
+            "description": "Tool type."
+          },
+          "config": {
+            "$ref": "#/components/schemas/McpToolConfig",
+            "description": "MCP server configuration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "config"
+        ],
+        "title": "McpToolDefinition",
+        "description": "Persisted MCP tool definition."
+      },
+      "NodeCategory": {
+        "type": "string",
+        "enum": [
+          "call_node",
+          "global_node",
+          "trigger",
+          "integration"
+        ],
+        "title": "NodeCategory",
+        "description": "Drives grouping in the AddNodePanel UI."
+      },
+      "NodeExample": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "data"
+        ],
+        "title": "NodeExample",
+        "description": "A worked example LLMs can pattern-match. Keep small and realistic."
+      },
+      "NodeSpec": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Description",
+            "description": "Human-facing explanation shown in AddNodePanel."
+          },
+          "llm_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Hint",
+            "description": "LLM-only guidance; omitted from the UI."
+          },
+          "category": {
+            "$ref": "#/components/schemas/NodeCategory"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Icon"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0"
+          },
+          "properties": {
+            "items": {
+              "$ref": "#/components/schemas/PropertySpec"
+            },
+            "type": "array",
+            "title": "Properties"
+          },
+          "examples": {
+            "items": {
+              "$ref": "#/components/schemas/NodeExample"
+            },
+            "type": "array",
+            "title": "Examples"
+          },
+          "graph_constraints": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GraphConstraints"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "display_name",
+          "description",
+          "category",
+          "icon",
+          "properties"
+        ],
+        "title": "NodeSpec",
+        "description": "Single source of truth for a node type."
+      },
+      "NodeTypesResponse": {
+        "properties": {
+          "spec_version": {
+            "type": "string",
+            "title": "Spec Version"
+          },
+          "node_types": {
+            "items": {
+              "$ref": "#/components/schemas/NodeSpec"
+            },
+            "type": "array",
+            "title": "Node Types"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spec_version",
+          "node_types"
+        ],
+        "title": "NodeTypesResponse"
+      },
+      "PresetToolParameter": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Parameter name used as a key in the request body."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "object",
+              "array"
+            ],
+            "title": "Type",
+            "description": "JSON type for the resolved value.",
+            "llm_hint": "Allowed values are string, number, boolean, object, and array."
+          },
+          "value_template": {
+            "type": "string",
+            "title": "Value Template",
+            "description": "Fixed value or template, e.g. {{initial_context.phone_number}}.",
+            "llm_hint": "Use {{initial_context.*}} for call-start context and {{gathered_context.*}} for values extracted during the call."
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "description": "Whether the parameter must resolve to a non-empty value.",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "value_template"
+        ],
+        "title": "PresetToolParameter",
+        "description": "A parameter injected by Bookivox at runtime."
+      },
+      "PropertyOption": {
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Value"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label"
+        ],
+        "title": "PropertyOption",
+        "description": "An option in an `options` or `multi_options` dropdown."
+      },
+      "PropertySpec": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PropertyType"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Description",
+            "description": "Human-facing explanation shown in the UI."
+          },
+          "llm_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Hint",
+            "description": "LLM-only guidance; omitted from the UI."
+          },
+          "default": {
+            "title": "Default"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": false
+          },
+          "placeholder": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placeholder"
+          },
+          "display_options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DisplayOptions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "options": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertyOption"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "properties": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PropertySpec"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Properties"
+          },
+          "min_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Value"
+          },
+          "max_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Value"
+          },
+          "min_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Length"
+          },
+          "max_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Length"
+          },
+          "pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pattern"
+          },
+          "editor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Editor"
+          },
+          "extra": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Extra"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "display_name",
+          "description"
+        ],
+        "title": "PropertySpec",
+        "description": "Single field on a node.\n\n`description` is HUMAN-FACING — shown under the field in the edit\ndialog. Keep it concise and explain what the field does.\n\n`llm_hint` is LLM-FACING — appears only in the `get_node_type` MCP\nresponse and in SDK schema output. Use it for catalog tool references\n(e.g., \"Use `list_recordings`\"), array shape, expected value idioms,\nor anything that would be noise in the UI. Optional; omit when the\n`description` already suffices for both audiences."
+      },
+      "PropertyType": {
+        "type": "string",
+        "enum": [
+          "string",
+          "number",
+          "boolean",
+          "options",
+          "multi_options",
+          "fixed_collection",
+          "json",
+          "tool_refs",
+          "document_refs",
+          "recording_ref",
+          "credential_ref",
+          "mention_textarea",
+          "url"
+        ],
+        "title": "PropertyType",
+        "description": "Bounded vocabulary of property types the renderer dispatches on.\n\nAdding a value here requires a matching arm in the frontend\n`<PropertyInput>` switch and (where relevant) the SDK codegen template."
+      },
+      "RecordingListResponseSchema": {
+        "properties": {
+          "recordings": {
+            "items": {
+              "$ref": "#/components/schemas/RecordingResponseSchema"
+            },
+            "type": "array",
+            "title": "Recordings"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recordings",
+          "total"
+        ],
+        "title": "RecordingListResponseSchema",
+        "description": "Response schema for list of recordings."
+      },
+      "RecordingResponseSchema": {
+        "properties": {
+          "recording_id": {
+            "type": "string",
+            "title": "Recording Id"
+          },
+          "tts_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tts Provider"
+          },
+          "tts_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tts Model"
+          },
+          "tts_voice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tts Voice Id"
+          },
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          },
+          "storage_key": {
+            "type": "string",
+            "title": "Storage Key",
+            "description": "Opaque asset reference for the stored audio. Pass it back unchanged to the signed-URL endpoint to obtain a playback URL; it cannot be used to derive the underlying storage location."
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metadata"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recording_id",
+          "transcript",
+          "storage_key",
+          "metadata",
+          "created_at",
+          "is_active"
+        ],
+        "title": "RecordingResponseSchema",
+        "description": "Response schema for a single recording."
+      },
+      "ToolParameter": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Parameter name used as a key in the tool request body.",
+            "llm_hint": "Use a stable snake_case name the agent can naturally fill."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "object",
+              "array"
+            ],
+            "title": "Type",
+            "description": "JSON type for the parameter value.",
+            "llm_hint": "Allowed values are string, number, boolean, object, and array."
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Description shown to the model for this parameter.",
+            "llm_hint": "Write this as an instruction to the agent: what value to provide and when."
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "description": "Whether this parameter is required when the tool is called.",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "description"
+        ],
+        "title": "ToolParameter",
+        "description": "A parameter that the tool accepts from the model at call time."
+      },
+      "ToolResponse": {
+        "properties": {
+          "tool_uuid": {
+            "type": "string",
+            "title": "Tool Uuid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "icon": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon"
+          },
+          "icon_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon Color"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "definition": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Definition"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreatedByResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "tool_uuid",
+          "name",
+          "description",
+          "category",
+          "icon",
+          "icon_color",
+          "status",
+          "definition",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ToolResponse",
+        "description": "Response schema for a reusable tool."
+      },
+      "TransferCallConfig": {
+        "properties": {
+          "destination": {
+            "type": "string",
+            "title": "Destination",
+            "description": "Phone number or SIP endpoint to transfer the call to, e.g. +1234567890 or PJSIP/1234."
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "none",
+              "custom",
+              "audio"
+            ],
+            "title": "Messagetype",
+            "description": "Type of message to play before transfer.",
+            "default": "none"
+          },
+          "customMessage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custommessage",
+            "description": "Custom message to play before transferring."
+          },
+          "audioRecordingId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audiorecordingid",
+            "description": "Recording ID for audio message before transfer."
+          },
+          "timeout": {
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 5.0,
+            "title": "Timeout",
+            "description": "Maximum seconds to wait for the destination to answer.",
+            "default": 30
+          }
+        },
+        "type": "object",
+        "required": [
+          "destination"
+        ],
+        "title": "TransferCallConfig",
+        "description": "Configuration for Transfer Call tools."
+      },
+      "TransferCallToolDefinition": {
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "title": "Schema Version",
+            "description": "Schema version.",
+            "default": 1
+          },
+          "type": {
+            "type": "string",
+            "const": "transfer_call",
+            "title": "Type",
+            "description": "Tool type."
+          },
+          "config": {
+            "$ref": "#/components/schemas/TransferCallConfig",
+            "description": "Transfer Call configuration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "config"
+        ],
+        "title": "TransferCallToolDefinition",
+        "description": "Tool definition for Transfer Call tools."
+      },
+      "UpdateWorkflowRequest": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "workflow_definition": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Definition"
+          },
+          "template_context_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Context Variables"
+          },
+          "workflow_configurations": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Configurations"
+          }
+        },
+        "type": "object",
+        "title": "UpdateWorkflowRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WorkflowListResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "total_runs": {
+            "type": "integer",
+            "title": "Total Runs"
+          },
+          "folder_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Folder Id"
+          },
+          "workflow_uuid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Uuid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "status",
+          "created_at",
+          "total_runs"
+        ],
+        "title": "WorkflowListResponse"
+      },
+      "WorkflowResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "workflow_definition": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Workflow Definition"
+          },
+          "current_definition_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Definition Id"
+          },
+          "template_context_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Context Variables"
+          },
+          "call_disposition_codes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CallDispositionCodes"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total_runs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Runs"
+          },
+          "workflow_configurations": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Configurations"
+          },
+          "version_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Number"
+          },
+          "version_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Status"
+          },
+          "workflow_uuid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Uuid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "status",
+          "created_at",
+          "workflow_definition",
+          "current_definition_id"
+        ],
+        "title": "WorkflowResponse"
+      }
+    }
+  }
+}
