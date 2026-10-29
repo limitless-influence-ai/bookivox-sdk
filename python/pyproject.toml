@@ -23,6 +23,8 @@ dev = ["pytest>=8", "mypy>=1.10", "ruff>=0.5"]
 [project.urls]
 Homepage = "https://bookivox.com"
 Documentation = "https://docs.bookivox.com"
+Repository = "https://github.com/limitless-influence-ai/bookivox-sdk"
+Issues = "https://github.com/limitless-influence-ai/bookivox-sdk/issues"
 
 [project.scripts]
 bookivox = "bookivox_sdk.cli:main"

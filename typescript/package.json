@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Official TypeScript SDK for the Bookivox API",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/limitless-influence-ai/bookivox-sdk.git",
+    "directory": "typescript"
+  },
+  "homepage": "https://docs.bookivox.com/sdk/typescript",
+  "bugs": {
+    "url": "https://github.com/limitless-influence-ai/bookivox-sdk/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
