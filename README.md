@@ -12,10 +12,10 @@ and test calls.
 The `bookivox` CLI ships inside the Python package: one install gives you both
 the SDK and the command-line tool.
 
-- **Typed** — models and method signatures generated from the API OpenAPI schema.
-- **Safe by default** — timeouts, retries on idempotent verbs only, typed errors, no secret logging.
-- **Fixed origin** — every request targets `https://api.bookivox.com` over TLS; the URL is not configurable.
-- **Minimal dependencies** — `httpx` for Python, the global `fetch` for TypeScript.
+- **Typed**: models and method signatures generated from the API OpenAPI schema.
+- **Safe by default**: timeouts, retries on idempotent verbs only, typed errors, no secret logging.
+- **Fixed origin**: every request targets `https://api.bookivox.com` over TLS; the URL is not configurable.
+- **Minimal dependencies**: `httpx` for Python, the global `fetch` for TypeScript.
 
 ## Quick start
 
@@ -47,7 +47,7 @@ Full documentation, including installation, authentication and error handling:
 ## Repository layout
 
 ```
-generate_sdk.py     generator (stdlib only) — OpenAPI -> both SDKs
+generate_sdk.py     generator (stdlib only): OpenAPI -> both SDKs
 generate_sdk.sh     wrapper: ./generate_sdk.sh [--check]
 openapi.sdk.json    filtered public contract (x-sdk-method)
 python/             Python SDK + CLI (hatchling, src layout)
@@ -94,7 +94,7 @@ git push origin v0.2.0
 ```
 
 The `Release` workflow verifies that the tag matches both versions, then
-publishes to PyPI and npm using **trusted publishing (OIDC)** — no token is
+publishes to PyPI and npm using **trusted publishing (OIDC)**: no token is
 stored in this repository. One-time setup: register the trusted publisher on
 PyPI (`bookivox`) and npm (`@bookivox/sdk`) with workflow `release.yml`.
 
@@ -106,4 +106,4 @@ PyPI (`bookivox`) and npm (`@bookivox/sdk`) with workflow `release.yml`.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT, see [LICENSE](./LICENSE).

@@ -4,10 +4,10 @@ Official TypeScript SDK for the [Bookivox](https://bookivox.com) API: typed
 access to agents, node types, tools, knowledge-base documents, recordings,
 credentials and test calls.
 
-- **Zero runtime dependency** — uses the global `fetch` (Node 18+, Bun, Deno, edge runtimes).
-- **ESM only** — `"type": "module"`, `import` syntax.
-- **Typed** — every method and payload ships with generated `.d.ts` declarations.
-- **Safe by default** — timeouts, retries on idempotent verbs only, typed errors, no secret logging.
+- **Zero runtime dependency**: uses the global `fetch` (Node 18+, Bun, Deno, edge runtimes).
+- **ESM only**: `"type": "module"`, `import` syntax.
+- **Typed**: every method and payload ships with generated `.d.ts` declarations.
+- **Safe by default**: timeouts, retries on idempotent verbs only, typed errors, no secret logging.
 
 ## Requirements
 
@@ -61,10 +61,10 @@ const client = new Bookivox({
 
 | Option | Env var | Default |
 | --- | --- | --- |
-| `apiKey` | `BOOKIVOX_API_KEY` | — (required) |
-| `timeoutMs` | — | `30000` |
-| `maxRetries` | — | `2` |
-| `fetch` | — | `globalThis.fetch` |
+| `apiKey` | `BOOKIVOX_API_KEY` | Required |
+| `timeoutMs` | none | `30000` |
+| `maxRetries` | none | `2` |
+| `fetch` | none | `globalThis.fetch` |
 
 The API origin is `https://api.bookivox.com` and is not configurable.
 
@@ -112,9 +112,9 @@ try {
   await client.getWorkflow("wf_123");
 } catch (error) {
   if (error instanceof AuthenticationError) {
-    // 401 — invalid or revoked key
+    // 401: invalid or revoked key
   } else if (error instanceof NotFoundError) {
-    // 404 — unknown agent, or outside your organization
+    // 404: unknown agent, or outside your organization
   } else if (error instanceof ValidationError) {
     console.error(error.statusCode, error.body);
   } else if (error instanceof RateLimitError) {

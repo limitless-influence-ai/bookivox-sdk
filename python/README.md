@@ -4,10 +4,10 @@ Official Python client **and CLI** for the [Bookivox](https://bookivox.com) API:
 typed access to agents, node types, tools, knowledge-base documents, recordings,
 credentials and test calls.
 
-- **Typed** — generated `TypedDict` models and typed method signatures (`py.typed`).
-- **Safe by default** — timeouts, retries on idempotent verbs only, typed errors, no secret logging.
-- **One install** — `pip install bookivox` gives you both the SDK and the `bookivox` CLI.
-- **Single runtime dependency** — `httpx`.
+- **Typed**: generated `TypedDict` models and typed method signatures (`py.typed`).
+- **Safe by default**: timeouts, retries on idempotent verbs only, typed errors, no secret logging.
+- **One install**: `pip install bookivox` gives you both the SDK and the `bookivox` CLI.
+- **Single runtime dependency**: `httpx`.
 
 ## Requirements
 
@@ -55,9 +55,9 @@ client = Bookivox(
 
 | Parameter | Env var | Default |
 | --- | --- | --- |
-| `api_key` | `BOOKIVOX_API_KEY` | — (required) |
-| `timeout` | — | `30.0` |
-| `max_retries` | — | `2` |
+| `api_key` | `BOOKIVOX_API_KEY` | Required |
+| `timeout` | none | `30.0` |
+| `max_retries` | none | `2` |
 
 The API origin is `https://api.bookivox.com` and is not configurable.
 
@@ -106,9 +106,9 @@ try:
     with Bookivox() as client:
         client.get_workflow("wf_123")
 except AuthenticationError:
-    ...  # 401 — invalid or revoked key
+    ...  # 401: invalid or revoked key
 except NotFoundError:
-    ...  # 404 — unknown agent, or outside your organization
+    ...  # 404: unknown agent, or outside your organization
 except ValidationError as exc:
     print(exc.status_code, exc.body)
 except RateLimitError as exc:
